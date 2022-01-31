@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/SiteComTraces/static/css/main.5c24d017.css",
+    "main.js": "/SiteComTraces/static/js/main.02585f80.js",
+    "index.html": "/SiteComTraces/index.html",
+    "main.5c24d017.css.map": "/SiteComTraces/static/css/main.5c24d017.css.map",
+    "main.02585f80.js.map": "/SiteComTraces/static/js/main.02585f80.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5c24d017.css",
+    "static/js/main.02585f80.js"
+  ]
+}
