@@ -12,6 +12,7 @@ function App() {
   function tracesFile(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
+    setFileName(file);
     setIsLoading(true);
 
     reader.readAsText(file);
