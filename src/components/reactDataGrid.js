@@ -9,6 +9,7 @@ import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 import "@inovua/reactdatagrid-community/index.css";
 
 function SiteComDataGrid({ tracesData }) {
+  const defaultSortInfo = { name: "TimeCreated", dir: -1 };
   const filterValue = [
     { name: "TimeCreated", type: "date", operator: "before", value: "" },
     { name: "ServerName", type: "string", operator: "contains", value: "" },
@@ -96,6 +97,7 @@ function SiteComDataGrid({ tracesData }) {
       name: "UserIP",
       header: "User IP",
       minWidth: 149,
+      defaultWidth: 149,
       defaultFlex: 1,
     },
     {
@@ -131,20 +133,32 @@ function SiteComDataGrid({ tracesData }) {
     },
   ];
 
-  const gridStyle = { minHeight: 500, minWidth: "100%" };
+  const gridStyle = { minHeight: 400 };
+  const styles = {
+    border: "2px solid",
+    padding: "10px",
+    backgroundColor: "#FFB533",
+    height: "100%",
+    width: "95%",
+  };
   // console.log("***************************************");
 
   const onRenderRow = useCallback((rowProps) => {
     // save the original handlers to be called later
-    const { onClick, onDoubleClick } = rowProps;
+    // const { onClick, onDoubleClick } = rowProps;
 
-    rowProps.onDoubleClick = (event) => {
-      console.log(event);
-    };
+    // rowProps.onDoubleClick = (event) => {
+    // console.log(event);
+    // };
     rowProps.onClick = (event) => {
+      const textDisplay = event.target.parentElement.parentElement.innerText;
       console.log(event);
+      const displayMsg = document.getElementById("Display");
+      displayMsg.innerText = textDisplay;
+      // console.log(displayMsg.textContent);
     };
   }, []);
+
   // console.log("***************************************");
   return (
     <div>
@@ -152,12 +166,15 @@ function SiteComDataGrid({ tracesData }) {
         idProperty="id"
         pagination
         columns={columns}
-        // defaultSortInfo={defaultSortInfo}
+        defaultSortInfo={defaultSortInfo}
         defaultFilterValue={filterValue}
         dataSource={tracesData}
         style={gridStyle}
         onRenderRow={onRenderRow}
       />
+      <div style={styles}>
+        <p id="Display" />
+      </div>
     </div>
   );
 }
