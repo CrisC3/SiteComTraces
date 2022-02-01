@@ -140,6 +140,7 @@ function SiteComDataGrid({ tracesData }) {
     backgroundColor: "#bcd4e6",
     height: "100%",
     width: "95%",
+    overflowWrap: "break-word",
   };
   // console.log("***************************************");
 
