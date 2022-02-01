@@ -77,7 +77,7 @@ function SiteComDataGrid({ tracesData }) {
         };
       },
       render: ({ value, cellProps }) => {
-        return moment(value).format("M/D/YYYY hh:mm:ss a");
+        return moment(value).format("M/D/YYYY HH:mm:ss");
       },
     },
     {
