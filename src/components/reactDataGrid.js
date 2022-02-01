@@ -137,7 +137,7 @@ function SiteComDataGrid({ tracesData }) {
   const styles = {
     border: "2px solid",
     padding: "10px",
-    backgroundColor: "#FFB533",
+    backgroundColor: "#bcd4e6",
     height: "100%",
     width: "95%",
   };
