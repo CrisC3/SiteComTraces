@@ -4,30 +4,36 @@ import SiteComDataGrid from "./components/reactDataGrid";
 import DisplayLoading from "./components/reactLoading";
 
 function App() {
-  const [fileName, setFileName] = useState([]);
+  // const [fileName, setFileName] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tracesData, setTracesData] = useState([]);
   const [loadedData, setLoadedData] = useState(false);
+  const [countProc, setCountProc] = useState(0);
 
   async function tracesFile(event) {
     const allFiles = event.target.files;
-    var filesContainer = "";
+    let filesContainer = "";
 
-    // setFileName(file);
-    setIsLoading(true);
+    if (allFiles.length >= 4) {
+      alert("Please upload up to 3 files at a time");
+      return;
+    } else {
+      // setFileName(file);
+      setIsLoading(true);
 
-    for await (const file of allFiles) {
-      const reader = new FileReader();
-      reader.readAsText(file);
-      const result = await new Promise((resolve, reject) => {
-        reader.onloadend = function (event) {
-          filesContainer += reader.result;
-          resolve();
-        };
-      });
+      for await (const file of allFiles) {
+        const reader = new FileReader();
+        reader.readAsText(file);
+        const result = await new Promise((resolve, reject) => {
+          reader.onloadend = function (event) {
+            filesContainer += reader.result;
+            resolve();
+          };
+        });
+      }
+      xmlParser(filesContainer);
+      setIsLoading(false);
     }
-    xmlParser(filesContainer);
-    setIsLoading(false);
   }
 
   function xmlParser(xmlText) {
@@ -40,7 +46,7 @@ function App() {
   }
 
   async function traceObjects(traces) {
-    let processedCount = 0;
+    // let processedCount = 0;
 
     await traces.forEach((trace) => {
       const timeCreated =
@@ -73,6 +79,8 @@ function App() {
           StackTrace: stackTrace,
         },
       ]);
+
+      setCountProc((prevCountProc) => 1 + prevCountProc);
     });
 
     setIsLoading(false);
@@ -83,9 +91,10 @@ function App() {
     <div>
       <h1>SiteCom Web Traces Viewer</h1>
       <input type="file" accept=".svclog" onChange={tracesFile} multiple />
-      <p>
-        {/* <b>Trace File Name:</b> {fileName.name} */}
-      </p>
+      <div>
+        {" "}
+        <p>{/*{isLoading ? "Processing..." + countProc : null}*/}</p>{" "}
+      </div>
       {isLoading ? (
         <DisplayLoading color={"gray"} type={"spin"} />
       ) : loadedData ? (

@@ -3,8 +3,8 @@ import React, { useCallback } from "react";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import moment from "moment";
 import DateFilter from "@inovua/reactdatagrid-community/DateFilter";
-import NumberFilter from "@inovua/reactdatagrid-community/NumberFilter";
-import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
+// import NumberFilter from "@inovua/reactdatagrid-community/NumberFilter";
+// import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 
 import "@inovua/reactdatagrid-community/index.css";
 
