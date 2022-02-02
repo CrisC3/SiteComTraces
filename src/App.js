@@ -4,23 +4,30 @@ import SiteComDataGrid from "./components/reactDataGrid";
 import DisplayLoading from "./components/reactLoading";
 
 function App() {
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tracesData, setTracesData] = useState([]);
   const [loadedData, setLoadedData] = useState(false);
 
-  function tracesFile(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    setFileName(file);
+  async function tracesFile(event) {
+    const allFiles = event.target.files;
+    var filesContainer = "";
+
+    // setFileName(file);
     setIsLoading(true);
 
-    reader.readAsText(file);
-
-    reader.onloadend = (event) => {
-      const content = event.target.result;
-      xmlParser(content);
-    };
+    for await (const file of allFiles) {
+      const reader = new FileReader();
+      reader.readAsText(file);
+      const result = await new Promise((resolve, reject) => {
+        reader.onloadend = function (event) {
+          filesContainer += reader.result;
+          resolve();
+        };
+      });
+    }
+    xmlParser(filesContainer);
+    setIsLoading(false);
   }
 
   function xmlParser(xmlText) {
@@ -75,9 +82,9 @@ function App() {
   return (
     <div>
       <h1>SiteCom Web Traces Viewer</h1>
-      <input type="file" accept=".svclog" onChange={tracesFile} />
+      <input type="file" accept=".svclog" onChange={tracesFile} multiple />
       <p>
-        <b>Trace File Name:</b> {fileName.name}
+        {/* <b>Trace File Name:</b> {fileName.name} */}
       </p>
       {isLoading ? (
         <DisplayLoading color={"gray"} type={"spin"} />

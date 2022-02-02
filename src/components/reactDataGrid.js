@@ -153,10 +153,8 @@ function SiteComDataGrid({ tracesData }) {
     // };
     rowProps.onClick = (event) => {
       const textDisplay = event.target.parentElement.parentElement.innerText;
-      console.log(event);
       const displayMsg = document.getElementById("Display");
       displayMsg.innerText = textDisplay;
-      // console.log(displayMsg.textContent);
     };
   }, []);
 
