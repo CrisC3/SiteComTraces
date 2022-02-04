@@ -4,7 +4,6 @@ import SiteComDataGrid from "./components/reactDataGrid";
 import DisplayLoading from "./components/reactLoading";
 
 function App() {
-  // const [fileName, setFileName] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tracesData, setTracesData] = useState([]);
   const [loadedData, setLoadedData] = useState(false);
@@ -18,7 +17,6 @@ function App() {
       alert("Please upload up to 3 files at a time");
       return;
     } else {
-      // setFileName(file);
       setIsLoading(true);
 
       for await (const file of allFiles) {
