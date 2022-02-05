@@ -5,7 +5,7 @@ import ReactDataGrid from "@inovua/reactdatagrid-community";
 import moment from "moment";
 import DateFilter from "@inovua/reactdatagrid-community/DateFilter";
 // import NumberFilter from "@inovua/reactdatagrid-community/NumberFilter";
-// import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
+import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 
 import "@inovua/reactdatagrid-community/index.css";
 window.moment = moment;
@@ -14,13 +14,47 @@ function SiteComDataGrid({ tracesData }) {
   const [xmlTrace, setXmlTrace] = useState("");
   const [rowClicked, setRowClicked] = useState(false);
 
+  function SortArray(x, y) {
+    return x.id.localeCompare(y.id);
+  }
+
+  const serversSelect = tracesData.reduce((servers, currentServer) => {
+    if (
+      servers.filter((element) => element.id == currentServer.ServerName).length
+    ) {
+      return servers;
+    }
+    servers.push({
+      id: currentServer.ServerName,
+      label: currentServer.ServerName.toLowerCase(),
+    });
+
+    const output = servers.sort(SortArray);
+
+    return output;
+  }, []);
+
+  const usersSelect = tracesData.reduce((users, currentUser) => {
+    if (users.filter((element) => element.id == currentUser.Username).length) {
+      return users;
+    }
+
+    users.push({
+      id: currentUser.Username,
+      label: currentUser.Username.toLowerCase(),
+    });
+
+    const output = users.sort(SortArray);
+    return output;
+  }, []);
+
   const defaultSortInfo = { name: "SystemTime", dir: -1 };
   const filterValue = [
-    { name: "SystemTime", type: "date", operator: "before", value: "" },
-    { name: "ServerName", type: "string", operator: "contains", value: "" },
-    { name: "Username", type: "string", operator: "contains", value: "" },
-    { name: "UserIP", type: "string", operator: "contains", value: "" },
-    { name: "ComponentName", type: "string", operator: "contains", value: "" },
+    { name: "SystemTime", operator: "before", type: "date", value: "" },
+    { name: "ServerName", operator: "inlist", type: "select", value: "" },
+    { name: "Username", operator: "inlist", type: "select", value: "" },
+    { name: "UserIP", operator: "contains", type: "string", value: "" },
+    { name: "ComponentName", operator: "contains", type: "string", value: "" },
     {
       name: "ApplicationName",
       type: "string",
@@ -97,12 +131,24 @@ function SiteComDataGrid({ tracesData }) {
       minWidth: 121,
       width: 121,
       defaultFlex: 1,
+      filterEditor: SelectFilter,
+      filterEditorProps: {
+        placeholder: "All",
+        dataSource: serversSelect,
+      },
+      render: ({ value }) => value,
     },
     {
       name: "Username",
       minWidth: 104,
       width: 104,
       defaultFlex: 1,
+      filterEditor: SelectFilter,
+      filterEditorProps: {
+        placeholder: "All",
+        dataSource: usersSelect,
+      },
+      render: ({ value }) => value,
     },
     {
       name: "UserIP",
@@ -181,8 +227,8 @@ function SiteComDataGrid({ tracesData }) {
     <div>
       <ReactDataGrid
         idProperty="id"
-        // pagination
-        // defaultLimit={100}
+        pagination
+        defaultLimit={100}
         columns={columns}
         defaultSortInfo={defaultSortInfo}
         defaultFilterValue={filterValue}
