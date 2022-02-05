@@ -144,18 +144,21 @@ function SiteComDataGrid({ tracesData }) {
     },
     {
       name: "FullTrace",
+      header: "Full Trace",
       defaultFlex: 3,
     },
   ];
 
-  const gridStyle = { minHeight: 400 };
+  const setHeight = "360px";
+  const gridStyle = { height: setHeight };
   const styles = {
     border: "2px solid",
     padding: "10px",
     backgroundColor: "#FCF3CF",
-    height: "100%",
-    width: "98.7%",
+    height: setHeight,
+    width: "98%",
     overflowWrap: "break-word",
+    overflowY: "scroll",
   };
 
   const onRowClick = useCallback((rowProps, event) => {
@@ -185,9 +188,7 @@ function SiteComDataGrid({ tracesData }) {
         onRowClick={onRowClick}
       />
       {rowClicked && (
-        <div style={styles}>
-          <XMLViewer xml={xmlTrace} theme={customTheme} />
-        </div>
+        <XMLViewer xml={xmlTrace} theme={customTheme} style={styles} />
       )}
     </div>
   );
