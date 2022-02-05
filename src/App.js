@@ -85,23 +85,21 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>SiteCom Web Traces Viewer</h1>
-      <input type="file" accept=".svclog" onChange={tracesFile} multiple />
+    <>
       <div>
-        {isLoading ? (
-          <>
-            <p>{isLoading && "Processing..."}</p>
-            <DisplayLoading color={"gray"} type={"spin"} />
-          </>
-        ) : loadedData ? (
-          <>
-            <hr />
-            <SiteComDataGrid tracesData={tracesData} />
-          </>
-        ) : null}
+        <h1>SiteCom Web Traces Viewer</h1>
+        <input type="file" accept=".svclog" onChange={tracesFile} multiple />
+        <hr />
       </div>
-    </div>
+      {isLoading ? (
+        <>
+          <p>{isLoading && "Processing..."}</p>
+          <DisplayLoading color={"gray"} type={"spin"} />
+        </>
+      ) : loadedData ? (
+        <SiteComDataGrid tracesData={tracesData} />
+      ) : null}
+    </>
   );
 }
 
