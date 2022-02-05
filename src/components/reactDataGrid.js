@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import XMLViewer from "react-xml-viewer";
 
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import moment from "moment";
@@ -7,11 +8,15 @@ import DateFilter from "@inovua/reactdatagrid-community/DateFilter";
 // import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 
 import "@inovua/reactdatagrid-community/index.css";
+window.moment = moment;
 
 function SiteComDataGrid({ tracesData }) {
-  const defaultSortInfo = { name: "TimeCreated", dir: -1 };
+  const [xmlTrace, setXmlTrace] = useState("");
+  const [rowClicked, setRowClicked] = useState(false);
+
+  const defaultSortInfo = { name: "SystemTime", dir: -1 };
   const filterValue = [
-    { name: "TimeCreated", type: "date", operator: "before", value: "" },
+    { name: "SystemTime", type: "date", operator: "before", value: "" },
     { name: "ServerName", type: "string", operator: "contains", value: "" },
     { name: "Username", type: "string", operator: "contains", value: "" },
     { name: "UserIP", type: "string", operator: "contains", value: "" },
@@ -46,6 +51,12 @@ function SiteComDataGrid({ tracesData }) {
       operator: "contains",
       value: "",
     },
+    {
+      name: "FullTrace",
+      type: "string",
+      operator: "contains",
+      value: "",
+    },
   ];
 
   const columns = [
@@ -58,16 +69,17 @@ function SiteComDataGrid({ tracesData }) {
       type: "number",
     },
     {
-      name: "TimeCreated",
-      header: "Time Created",
+      name: "SystemTime",
+      header: "System Time",
       defaultFlex: 1,
-      minWidth: 149,
-      defaultWidth: 149,
+      minWidth: 135,
+      defaultWidth: 150,
+      dateFormat: "YYYY-MM-DD HH:mm:ss",
       filterEditor: DateFilter,
       filterEditorProps: (props, { index }) => {
         // for range and notinrange operators, the index is 1 for the after field
         return {
-          dateFormat: "M/D/YYYY hh:mm:ss a",
+          dateFormat: "YYYY-MM-DD HH:mm:ss",
           cancelButton: false,
           highlightWeekends: false,
           placeholder:
@@ -76,9 +88,8 @@ function SiteComDataGrid({ tracesData }) {
               : "Created date is after...",
         };
       },
-      render: ({ value, cellProps }) => {
-        return moment(value).format("M/D/YYYY HH:mm:ss");
-      },
+      render: ({ value, cellProps: { dateFormat } }) =>
+        moment(value).format(dateFormat),
     },
     {
       name: "ServerName",
@@ -131,49 +142,53 @@ function SiteComDataGrid({ tracesData }) {
       defaultVisible: false,
       defaultFlex: 3,
     },
+    {
+      name: "FullTrace",
+      defaultFlex: 3,
+    },
   ];
 
   const gridStyle = { minHeight: 400 };
   const styles = {
     border: "2px solid",
     padding: "10px",
-    backgroundColor: "#bcd4e6",
+    backgroundColor: "#FCF3CF",
     height: "100%",
-    width: "95%",
+    width: "98.7%",
     overflowWrap: "break-word",
   };
-  // console.log("***************************************");
 
-  const onRenderRow = useCallback((rowProps) => {
-    // save the original handlers to be called later
-    // const { onClick, onDoubleClick } = rowProps;
-
-    // rowProps.onDoubleClick = (event) => {
-    // console.log(event);
-    // };
-    rowProps.onClick = (event) => {
-      const textDisplay = event.target.parentElement.parentElement.innerText;
-      const displayMsg = document.getElementById("Display");
-      displayMsg.innerText = textDisplay;
-    };
+  const onRowClick = useCallback((rowProps, event) => {
+    setRowClicked(true);
+    const textDisplay = rowProps.data.FullTrace;
+    setXmlTrace(textDisplay);
   }, []);
 
-  // console.log("***************************************");
+  const customTheme = {
+    tagColor: "#3231c0",
+    attributeKeyColor: "#d0384a",
+    attributeValueColor: "#6d12d2",
+    overflowBreak: true,
+  };
+
   return (
     <div>
       <ReactDataGrid
         idProperty="id"
         pagination
+        defaultLimit={100}
         columns={columns}
         defaultSortInfo={defaultSortInfo}
         defaultFilterValue={filterValue}
         dataSource={tracesData}
         style={gridStyle}
-        onRenderRow={onRenderRow}
+        onRowClick={onRowClick}
       />
-      <div style={styles}>
-        <p id="Display" />
-      </div>
+      {rowClicked && (
+        <div style={styles}>
+          <XMLViewer xml={xmlTrace} theme={customTheme} />
+        </div>
+      )}
     </div>
   );
 }
