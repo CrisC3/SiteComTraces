@@ -149,7 +149,7 @@ function SiteComDataGrid({ tracesData }) {
     },
   ];
 
-  const setHeight = "360px";
+  const setHeight = "380px";
   const gridStyle = { height: setHeight };
   const styles = {
     border: "2px solid",
@@ -159,12 +159,15 @@ function SiteComDataGrid({ tracesData }) {
     width: "98%",
     overflowWrap: "break-word",
     overflowY: "scroll",
+    marginTop: "2px",
   };
 
-  const onRowClick = useCallback((rowProps, event) => {
-    setRowClicked(true);
+  const onRenderRow = useCallback((rowProps) => {
     const textDisplay = rowProps.data.FullTrace;
-    setXmlTrace(textDisplay);
+    if (rowProps.active) {
+      setXmlTrace(textDisplay);
+      setRowClicked(true);
+    }
   }, []);
 
   const customTheme = {
@@ -178,14 +181,14 @@ function SiteComDataGrid({ tracesData }) {
     <div>
       <ReactDataGrid
         idProperty="id"
-        pagination
-        defaultLimit={100}
+        // pagination
+        // defaultLimit={100}
         columns={columns}
         defaultSortInfo={defaultSortInfo}
         defaultFilterValue={filterValue}
         dataSource={tracesData}
         style={gridStyle}
-        onRowClick={onRowClick}
+        onRenderRow={onRenderRow}
       />
       {rowClicked && (
         <XMLViewer xml={xmlTrace} theme={customTheme} style={styles} />
