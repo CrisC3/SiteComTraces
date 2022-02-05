@@ -42,6 +42,7 @@ function App() {
     const E2ETraceEvents = await traces.getElementsByTagName("E2ETraceEvent");
 
     for await (const trace of E2ETraceEvents) {
+      const ifBlank = "(Blank)";
       const xmlString = new XMLSerializer().serializeToString(trace);
       const systemTime = trace
         .getElementsByTagName("TimeCreated")[0]
@@ -67,15 +68,15 @@ function App() {
         {
           id: ++tracesData.length,
           SystemTime: systemTime,
-          ServerName: serverName,
-          Username: userName,
-          UserIP: userIpAddress,
-          ComponentName: componentName,
-          ApplicationName: applicationName,
-          TraceLevel: traceLevel,
-          Message: message,
-          SubMessage: subMessage,
-          StackTrace: stackTrace,
+          ServerName: serverName ? serverName : ifBlank,
+          Username: userName ? userName : ifBlank,
+          UserIP: userIpAddress ? userIpAddress : ifBlank,
+          ComponentName: componentName ? componentName : ifBlank,
+          ApplicationName: applicationName ? applicationName : ifBlank,
+          TraceLevel: traceLevel ? traceLevel : ifBlank,
+          Message: message ? message : ifBlank,
+          SubMessage: subMessage ? subMessage : ifBlank,
+          StackTrace: stackTrace ? stackTrace : ifBlank,
           FullTrace: xmlString,
         },
       ]);
