@@ -10,7 +10,7 @@ function App() {
 
   async function tracesFile(event) {
     setIsLoading(true);
-    
+
     const allFiles = event.target.files;
     let filesContainer = "";
 
@@ -19,21 +19,24 @@ function App() {
       reader.readAsText(file);
       const result = await new Promise((resolve, reject) => {
         reader.onloadend = function (event) {
-          filesContainer += reader.result;
+          // filesContainer += reader.result;
+          xmlParser(reader.result);
           resolve();
         };
       });
     }
-    xmlParser(filesContainer);
+    // xmlParser(filesContainer);
+    setIsLoading(false);
+    setLoadedData(true);
   }
 
   function xmlParser(xmlText) {
+    // const xmlData = new DOMParser().parseFromString(xmlText, "text/xml");
     const xmlData = new DOMParser().parseFromString(
-      "<root>" + xmlText + "</root>",
+      `<root>${xmlText}</root>`,
       "text/xml"
     );
-
-    traceObjects(xmlData);
+    return traceObjects(xmlData);
   }
 
   async function traceObjects(traces) {
@@ -79,8 +82,9 @@ function App() {
         },
       ]);
     }
-    setIsLoading(false);
-    setLoadedData(true);
+    console.log(traces);
+
+    return 0;
   }
 
   return (
