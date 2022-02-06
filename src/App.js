@@ -5,14 +5,14 @@ import DisplayLoading from "./components/reactLoading";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-  const [tracesData, setTracesData] = useState([]);
   const [loadedData, setLoadedData] = useState(false);
+  const [tracesData, setTracesData] = useState([]);
 
   async function tracesFile(event) {
+    setIsLoading(true);
+    
     const allFiles = event.target.files;
     let filesContainer = "";
-
-    setIsLoading(true);
 
     for await (const file of allFiles) {
       const reader = new FileReader();
@@ -25,7 +25,6 @@ function App() {
       });
     }
     xmlParser(filesContainer);
-    setIsLoading(false);
   }
 
   function xmlParser(xmlText) {
@@ -34,7 +33,6 @@ function App() {
       "text/xml"
     );
 
-    setIsLoading(false);
     traceObjects(xmlData);
   }
 
@@ -97,9 +95,9 @@ function App() {
           <p>{isLoading && "Processing..."}</p>
           <DisplayLoading color={"gray"} type={"spin"} />
         </>
-      ) : loadedData ? (
-        <SiteComDataGrid tracesData={tracesData} />
-      ) : null}
+      ) : (
+        loadedData && <SiteComDataGrid tracesData={tracesData} />
+      )}
     </>
   );
 }
