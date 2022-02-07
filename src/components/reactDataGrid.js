@@ -21,7 +21,7 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
 
   const serversSelect = tracesData.reduce((servers, currentServer) => {
     if (
-      servers.filter((element) => element.id == currentServer.ServerName).length
+      servers.filter((element) => element.id === currentServer.ServerName).length
     ) {
       return servers;
     }
@@ -36,7 +36,7 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
   }, []);
 
   const usersSelect = tracesData.reduce((users, currentUser) => {
-    if (users.filter((element) => element.id == currentUser.Username).length) {
+    if (users.filter((element) => element.id === currentUser.Username).length) {
       return users;
     }
 
@@ -214,6 +214,29 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
     }
   }, []);
 
+  const renderLoadMask = ({ visible, livePagination, loadingText, zIndex }) => {
+    return (
+      <div
+        style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex,
+          background: "rgb(26, 26, 26)",
+          color: "white",
+          opacity: 0.8,
+          display: "flex",
+          position: "absolute",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {loadingMsg}
+      </div>
+    );
+  };
+
   const customTheme = {
     tagColor: "#3231c0",
     attributeKeyColor: "#d0384a",
@@ -232,8 +255,8 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
         dataSource={tracesData}
         style={gridStyle}
         loading={isLoading}
-        loadingText={loadingMsg}
         onRenderRow={onRenderRow}
+        renderLoadMask={isLoading ? renderLoadMask : null}
       />
       {rowClicked && (
         <XMLViewer xml={xmlTrace} theme={customTheme} style={styles} />

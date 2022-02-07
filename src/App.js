@@ -25,11 +25,11 @@ function App() {
 
         displayMsgFile(activeFile);
 
-        if (activeFile) console.log("Reading file..." + `"${activeFile}"`);
+        console.log(`Reading file... "${activeFile}"`);
 
         reader.readAsText(file);
 
-        const result = await new Promise((resolve, reject) => {
+        const result = await new Promise((resolve) => {
           reader.onloadend = function (event) {
             filesContainer += reader.result;
             resolve();
@@ -52,8 +52,6 @@ function App() {
     const ifBlank = "(Blank)";
     const E2ETraceEvents = traces.getElementsByTagName("E2ETraceEvent");
     let tracesObj = [...tracesData];
-    let processedCount = 0;
-    let tracesTotal = parseInt(E2ETraceEvents.length);
 
     for (const trace of E2ETraceEvents) {
       const xmlString = new XMLSerializer().serializeToString(trace).trim();
@@ -110,29 +108,18 @@ function App() {
         StackTrace: stackTrace ? stackTrace : ifBlank,
         FullTrace: xmlString,
       });
-
-      ++processedCount;
-
-      setTimeout(() => displayTraceCount(processedCount, tracesTotal));
-
-      if (processedCount === tracesTotal) {
-        setTracesData(tracesObj);
-        setIsLoading(false);
-        console.log("Done!");
-        const currentTime = new Date();
-        console.log(currentTime);
-      }
     }
+
+    setTracesData(tracesObj);
+    setIsLoading(false);
+
+    console.log("Done!");
+    const currentTime = new Date();
+    console.log(currentTime);
   }
 
   function displayMsgFile(filename) {
     setDisplayMsg(`Reading file ${filename}`);
-    return;
-  }
-
-  async function displayTraceCount(processed, total) {
-    setDisplayMsg(`Processing ${processed} out of ${total} traces`);
-
     return;
   }
 
