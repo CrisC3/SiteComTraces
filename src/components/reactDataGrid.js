@@ -4,13 +4,14 @@ import XMLViewer from "react-xml-viewer";
 import ReactDataGrid from "@inovua/reactdatagrid-community";
 import moment from "moment";
 import DateFilter from "@inovua/reactdatagrid-community/DateFilter";
-// import NumberFilter from "@inovua/reactdatagrid-community/NumberFilter";
 import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 
 import "@inovua/reactdatagrid-community/index.css";
+
+// Require for MomentJS support due React Grid dependencies
 window.moment = moment;
 
-function SiteComDataGrid({ tracesData }) {
+function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
   const [xmlTrace, setXmlTrace] = useState("");
   const [rowClicked, setRowClicked] = useState(false);
 
@@ -26,7 +27,7 @@ function SiteComDataGrid({ tracesData }) {
     }
     servers.push({
       id: currentServer.ServerName,
-      label: currentServer.ServerName.toLowerCase(),
+      label: currentServer.ServerName,
     });
 
     const output = servers.sort(SortArray);
@@ -41,7 +42,7 @@ function SiteComDataGrid({ tracesData }) {
 
     users.push({
       id: currentUser.Username,
-      label: currentUser.Username.toLowerCase(),
+      label: currentUser.Username,
     });
 
     const output = users.sort(SortArray);
@@ -94,32 +95,29 @@ function SiteComDataGrid({ tracesData }) {
   ];
 
   const columns = [
-    {
-      name: "id",
-      header: "Id",
-      defaultVisible: false,
-      defaultFlex: 1,
-      defaultWidth: 20,
-      type: "number",
-    },
+    // {
+    //   name: "id",
+    //   header: "Id",
+    //   defaultVisible: false,
+    //   defaultFlex: 1,
+    //   defaultWidth: 20,
+    //   type: "number",
+    // },
     {
       name: "SystemTime",
       header: "System Time",
       defaultFlex: 1,
       minWidth: 135,
       defaultWidth: 150,
+      type: "number",
       dateFormat: "YYYY-MM-DD HH:mm:ss",
       filterEditor: DateFilter,
       filterEditorProps: (props, { index }) => {
-        // for range and notinrange operators, the index is 1 for the after field
         return {
           dateFormat: "YYYY-MM-DD HH:mm:ss",
-          cancelButton: false,
+          cancelButton: true,
           highlightWeekends: false,
-          placeholder:
-            index === 1
-              ? "Created date is before..."
-              : "Created date is after...",
+          placeholder: index === 1 ? "End" : "Start",
         };
       },
       render: ({ value, cellProps: { dateFormat } }) =>
@@ -195,7 +193,7 @@ function SiteComDataGrid({ tracesData }) {
     },
   ];
 
-  const setHeight = "380px";
+  const setHeight = "342px";
   const gridStyle = { height: setHeight };
   const styles = {
     border: "2px solid",
@@ -222,11 +220,10 @@ function SiteComDataGrid({ tracesData }) {
     attributeValueColor: "#6d12d2",
     overflowBreak: true,
   };
-
   return (
     <div>
       <ReactDataGrid
-        idProperty="id"
+        // idProperty="id"
         pagination
         defaultLimit={100}
         columns={columns}
@@ -234,6 +231,8 @@ function SiteComDataGrid({ tracesData }) {
         defaultFilterValue={filterValue}
         dataSource={tracesData}
         style={gridStyle}
+        loading={isLoading}
+        loadingText={loadingMsg}
         onRenderRow={onRenderRow}
       />
       {rowClicked && (
