@@ -225,7 +225,7 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
       <ReactDataGrid
         // idProperty="id"
         pagination
-        defaultLimit={100}
+        defaultLimit={1000000}
         columns={columns}
         defaultSortInfo={defaultSortInfo}
         defaultFilterValue={filterValue}
