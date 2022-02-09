@@ -7,10 +7,18 @@ function App() {
   const [tracesData, setTracesData] = useState([]);
   const [displayMsg, setDisplayMsg] = useState("");
 
-  async function tracesFile(event) {
-    const currentTime = new Date();
-    console.log(currentTime);
+  function getDateTime(msg) {
+    const getCurrent = new Intl.DateTimeFormat("default", {
+      dateStyle: "medium",
+      timeStyle: "medium",
+    }).format();
+    console.log(`${msg} on ${getCurrent}`);
 
+    return;
+  }
+
+  async function tracesFile(event) {
+    getDateTime("Started");
     const allFiles = event.target.files;
     let filesContainer = "";
 
@@ -114,8 +122,7 @@ function App() {
     setIsLoading(false);
 
     console.log("Done!");
-    const currentTime = new Date();
-    console.log(currentTime);
+    getDateTime("Ended");
   }
 
   function displayMsgFile(filename) {
