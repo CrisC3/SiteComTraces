@@ -37,8 +37,8 @@ function App() {
 
         reader.readAsText(file);
 
-        const result = await new Promise((resolve) => {
-          reader.onloadend = function (event) {
+        await new Promise((resolve) => {
+          reader.onloadend = () => {
             filesContainer += reader.result;
             resolve();
           };

@@ -14,6 +14,7 @@ window.moment = moment;
 function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
   const [xmlTrace, setXmlTrace] = useState("");
   const [rowClicked, setRowClicked] = useState(false);
+  // const [gridRef, setGridRef] = useState(null);
 
   function SortArray(x, y) {
     return x.id.localeCompare(y.id);
@@ -21,7 +22,8 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
 
   const serversSelect = tracesData.reduce((servers, currentServer) => {
     if (
-      servers.filter((element) => element.id === currentServer.ServerName).length
+      servers.filter((element) => element.id === currentServer.ServerName)
+        .length
     ) {
       return servers;
     }
@@ -243,10 +245,12 @@ function SiteComDataGrid({ tracesData, isLoading, loadingMsg }) {
     attributeValueColor: "#6d12d2",
     overflowBreak: true,
   };
+
   return (
     <div>
       <ReactDataGrid
         // idProperty="id"
+        // handle={setGridRef}
         pagination
         defaultLimit={1000000}
         columns={columns}
