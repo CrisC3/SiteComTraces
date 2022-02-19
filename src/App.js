@@ -118,7 +118,11 @@ function App() {
       });
     }
 
-    setTracesData(tracesObj);
+    const distinctTraces = [
+      ...new Map(tracesObj.map((item) => [item["FullTrace"], item])).values(),
+    ];
+
+    setTracesData(distinctTraces);
     setIsLoading(false);
 
     console.log("Done!");
