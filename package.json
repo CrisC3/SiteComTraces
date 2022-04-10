@@ -6,7 +6,7 @@
   "dependencies": {
     "@inovua/reactdatagrid-community": "^4.8.3",
     "buffer": "^6.0.3",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
